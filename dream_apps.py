@@ -50,7 +50,7 @@ def main():
                     A comprehensive dashboard for tracking and analyzing investment portfolios.
                     Features include performance tracking, predictions, and detailed analytics.
                 </div>
-                <a href="https://e5uovfuhcfumf9tudf8xbz.streamlit.app/" target="_blank">
+                <a href="https://ole63tukdbl5fgamucyqbw.streamlit.app/" target="_blank">
                     <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open in Streamlit">
                 </a>
             </div>
