@@ -57,14 +57,17 @@ def main():
         """, unsafe_allow_html=True)
 
     with col2:
-        # Placeholder for future app
+        # Retirement Calculator App
         st.markdown("""
             <div class="app-card">
-                <div class="app-title">🔜 Coming Soon</div>
+                <div class="app-title">💰 Retirement Calculator</div>
                 <div class="app-description">
-                    More exciting applications are under development. 
-                    Stay tuned for updates!
+                    Plan your financial future with this comprehensive retirement planning tool.
+                    Calculate savings projections, required contributions, and retirement income scenarios.
                 </div>
+                <a href="https://h5nfjfylywpztr7xntbvjr.streamlit.app/" target="_blank">
+                    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open in Streamlit">
+                </a>
             </div>
         """, unsafe_allow_html=True)
 
