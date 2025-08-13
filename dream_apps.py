@@ -65,7 +65,7 @@ def main():
                     Plan your financial future with this comprehensive retirement planning tool.
                     Calculate savings projections, required contributions, and retirement income scenarios.
                 </div>
-                <a href="https://h5nfjfylywpztr7xntbvjr.streamlit.app/" target="_blank">
+                <a href="https://czsnconjpbqmhpvhjncydg.streamlit.app/" target="_blank">
                     <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open in Streamlit">
                 </a>
             </div>
