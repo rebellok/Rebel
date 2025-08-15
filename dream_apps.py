@@ -64,8 +64,8 @@ def main():
     # Apps section
     st.subheader("📱 Available Applications")
 
-    # Create layout for apps - using 3 columns now to accommodate the third app
-    col1, col2, col3 = st.columns(3)
+    # Create layout for apps - first row with 2 columns
+    col1, col2 = st.columns(2)
 
     with col1:
         # Portfolio Dashboard App
@@ -111,6 +111,9 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
+    # Second row with 2 columns
+    col3, col4 = st.columns(2)
+
     with col3:
         # Tax Estimator App
         st.markdown("""
@@ -133,6 +136,28 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
+    with col4:
+        # Interest Calculator App
+        st.markdown("""
+            <div class="app-card">
+                <div class="app-title">💹 Interest Calculator</div>
+                <div class="app-description">
+                    Advanced compound interest calculator with deposits, withdrawals, and comprehensive planning features.
+                    Perfect for savings goals and investment projections.
+                </div>
+                <div class="app-features">
+                    <strong>Features:</strong><br>
+                    • Basic & advanced modes<br>
+                    • Custom deposit/withdrawal periods<br>
+                    • Interactive charts & breakdowns<br>
+                    • Multiple compounding frequencies
+                </div>
+                <a href="https://ixcfeveoappfxmpbr4akpk7.streamlit.app/" target="_blank" class="launch-btn">
+                    🚀 Launch App
+                </a>
+            </div>
+        """, unsafe_allow_html=True)
+
     # Additional information section
     st.markdown("---")
     
@@ -140,13 +165,13 @@ def main():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.metric("Total Apps", "3", "1")
+        st.metric("Total Apps", "4", "1")
     
     with col2:
         st.metric("Categories", "Financial Tools", "")
     
     with col3:
-        st.metric("Latest Addition", "Tax Estimator", "")
+        st.metric("Latest Addition", "Interest Calculator", "")
 
     # App categories section
     st.markdown("---")
@@ -158,6 +183,7 @@ def main():
         st.markdown("""
         **💼 Investment & Portfolio Management**
         - Portfolio Dashboard - Track and analyze your investments
+        - Interest Calculator - Calculate compound interest with advanced features
         """)
     
     with categories_col2:
