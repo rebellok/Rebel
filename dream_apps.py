@@ -64,6 +64,10 @@ st.markdown("""
             display: inline-block;
             margin-right: 8px;
         }
+        .indian-flag {
+            display: inline-block;
+            margin-right: 8px;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -126,13 +130,13 @@ def main():
     # Retirement Planning Section
     st.markdown('<div class="section-header">🏖️ Retirement Planning Tools</div>', unsafe_allow_html=True)
 
-    col3, col4 = st.columns(2)
+    col3, col4, col5 = st.columns(3)
 
     with col3:
-        # US Retirement Calculator App
+        # US Retirement Planner App
         st.markdown("""
             <div class="app-card">
-                <div class="app-title">🇺🇸 US Retirement Calculator</div>
+                <div class="app-title">🇺🇸 US Retirement Planner</div>
                 <div class="app-description">
                     Plan your financial future with this comprehensive US retirement planning tool.
                     Calculate savings projections and retirement income scenarios for US markets.
@@ -151,7 +155,7 @@ def main():
         """, unsafe_allow_html=True)
 
     with col4:
-        # Canadian Retirement Calculator App
+        # Canadian Retirement Planner App
         st.markdown("""
             <div class="app-card">
                 <div class="app-title"><span class="canadian-flag">🇨🇦</span>Canadian Retirement Planner</div>
@@ -172,12 +176,35 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
+    with col5:
+        # Indian Retirement Planner App
+        st.markdown("""
+            <div class="app-card">
+                <div class="app-title"><span class="indian-flag">🇮🇳</span>India Retirement Planner</div>
+                <div class="app-description">
+                    Comprehensive retirement planning for Indians with EPF, NPS, PPF, and tax-efficient strategies.
+                    Includes inflation modeling and Indian tax considerations.
+                </div>
+                <div class="app-features">
+                    <strong>Features:</strong><br>
+                    • EPF/NPS/PPF calculations<br>
+                    • Indian tax implications<br>
+                    • Inflation-adjusted planning<br>
+                    • Withdrawal optimization<br>
+                    • Single/couple planning
+                </div>
+                <a href="https://zdgvadyanxoke46j24pmvu.streamlit.app/" target="_blank" class="launch-btn">
+                    🚀 Launch App
+                </a>
+            </div>
+        """, unsafe_allow_html=True)
+
     # Tax & Financial Planning Section
     st.markdown('<div class="section-header">🧾 Tax & Financial Planning</div>', unsafe_allow_html=True)
 
-    col5, col6 = st.columns(2)
+    col6, col7 = st.columns(2)
 
-    with col5:
+    with col6:
         # Tax Estimator App
         st.markdown("""
             <div class="app-card">
@@ -199,7 +226,7 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-    with col6:
+    with col7:
         # Placeholder for future app
         st.markdown("""
             <div class="app-card" style="opacity: 0.7;">
@@ -226,20 +253,20 @@ def main():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Total Apps", "5", "1")
+        st.metric("Total Apps", "6", "1")
     
     with col2:
-        st.metric("Countries Supported", "US + Canada", "🌎")
+        st.metric("Countries Supported", "US + CA + IN", "🌍")
     
     with col3:
         st.metric("Categories", "3", "")
     
     with col4:
-        st.metric("Latest Addition", "Canadian Retirement", "🇨🇦")
+        st.metric("Latest Addition", "India Retirement", "🇮🇳")
 
     # App categories section
     st.markdown("---")
-    st.subheader("🏷️ App Categories")
+    st.subheader("🷏 App Categories")
     
     categories_col1, categories_col2, categories_col3 = st.columns(3)
     
@@ -253,8 +280,9 @@ def main():
     with categories_col2:
         st.markdown("""
         **🏖️ Retirement Planning**
-        - US Retirement Calculator - 401(k), IRA, Social Security
+        - US Retirement Planner - 401(k), IRA, Social Security
         - Canadian Retirement Planner - RRSP, TFSA, CPP, OAS, GIS
+        - India Retirement Planner - EPF, NPS, PPF, tax optimization
         """)
 
     with categories_col3:
@@ -292,13 +320,13 @@ def main():
     st.markdown("---")
     st.subheader("🌎 Regional Coverage")
     
-    region_col1, region_col2 = st.columns(2)
+    region_col1, region_col2, region_col3 = st.columns(3)
     
     with region_col1:
         st.markdown("""
         **🇺🇸 United States Tools:**
         - US Tax Estimator (Federal taxes)
-        - US Retirement Calculator (401k, IRA, Social Security)
+        - US Retirement Planner (401k, IRA, Social Security)
         - Portfolio Dashboard (US markets focused)
         """)
     
@@ -308,6 +336,48 @@ def main():
         - Canadian Retirement Planner (RRSP, TFSA, CPP, OAS)
         - Provincial tax calculations included
         - GIS and benefit optimization features
+        """)
+
+    with region_col3:
+        st.markdown("""
+        **🇮🇳 Indian Tools:**
+        - India Retirement Planner (EPF, NPS, PPF)
+        - Indian tax system integration
+        - Inflation-adjusted expense planning
+        - Single & couple retirement scenarios
+        """)
+
+    # Special Features section
+    st.markdown("---")
+    st.subheader("⭐ Special Features by Region")
+    
+    features_col1, features_col2, features_col3 = st.columns(3)
+    
+    with features_col1:
+        st.markdown("""
+        **🇺🇸 US-Specific Features:**
+        - Social Security benefit calculations
+        - Traditional vs Roth IRA comparisons
+        - Federal tax bracket optimization
+        - 401(k) employer matching scenarios
+        """)
+    
+    with features_col2:
+        st.markdown("""
+        **🇨🇦 Canada-Specific Features:**
+        - CPP & OAS deferral strategies
+        - RRSP vs TFSA optimization
+        - Provincial tax variations
+        - GIS clawback minimization
+        """)
+    
+    with features_col3:
+        st.markdown("""
+        **🇮🇳 India-Specific Features:**
+        - EPF withdrawal tax implications
+        - NPS tax-free vs annuity options
+        - PPF 15-year lock-in modeling
+        - Medical inflation considerations
         """)
 
     # Footer
@@ -321,12 +391,12 @@ def main():
         
         **🤝 Feedback:** Your feedback helps improve these tools. Feel free to reach out with suggestions.
         
-        **🌍 Expanding Coverage:** Working to add more regional-specific tools and calculators.
+        **🌍 Expanding Coverage:** Now covering US, Canada, and India with specialized retirement planning tools!
     """)
     
     # Last updated info
     st.markdown("---")
-    st.caption("Last updated: December 2024 | Apps are continuously maintained and improved | Now featuring Canadian retirement planning tools!")
+    st.caption("Last updated: December 2024 | Apps are continuously maintained and improved | Now featuring retirement planning for US, Canada, and India!")
 
 if __name__ == "__main__":
     main()
