@@ -26,9 +26,6 @@ from io import BytesIO, StringIO
 
 from typing import Optional 
 
-from reportlab.lib.pagesizes import letter 
-
-from reportlab.pdfgen import canvas 
 
 import tempfile 
 
