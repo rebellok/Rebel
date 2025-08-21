@@ -133,10 +133,10 @@ def main():
     col3, col4, col5 = st.columns(3)
 
     with col3:
-        # US Retirement Planner App
+        # US Retirement Calculator App
         st.markdown("""
             <div class="app-card">
-                <div class="app-title">🇺🇸 US Retirement Planner</div>
+                <div class="app-title">🇺🇸 US Retirement Calculator</div>
                 <div class="app-description">
                     Plan your financial future with this comprehensive US retirement planning tool.
                     Calculate savings projections and retirement income scenarios for US markets.
@@ -155,7 +155,7 @@ def main():
         """, unsafe_allow_html=True)
 
     with col4:
-        # Canadian Retirement Planner App
+        # Canadian Retirement Calculator App
         st.markdown("""
             <div class="app-card">
                 <div class="app-title"><span class="canadian-flag">🇨🇦</span>Canadian Retirement Planner</div>
@@ -177,10 +177,10 @@ def main():
         """, unsafe_allow_html=True)
 
     with col5:
-        # Indian Retirement Planner App
+        # Indian Retirement Calculator App
         st.markdown("""
             <div class="app-card">
-                <div class="app-title"><span class="indian-flag">🇮🇳</span>India Retirement Planner</div>
+                <div class="app-title"><span class="indian-flag">🇮🇳</span>India Retirement Calculator</div>
                 <div class="app-description">
                     Comprehensive retirement planning for Indians with EPF, NPS, PPF, and tax-efficient strategies.
                     Includes inflation modeling and Indian tax considerations.
@@ -199,12 +199,63 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-    # Tax & Financial Planning Section
-    st.markdown('<div class="section-header">🧾 Tax & Financial Planning</div>', unsafe_allow_html=True)
+    # Real Estate & Investment Tools Section
+    st.markdown('<div class="section-header">🏠 Real Estate & Investment Tools</div>', unsafe_allow_html=True)
 
     col6, col7 = st.columns(2)
 
     with col6:
+        # Mortgage Calculator App
+        st.markdown("""
+            <div class="app-card">
+                <div class="app-title">🏠 Mortgage Calculator</div>
+                <div class="app-description">
+                    Comprehensive mortgage calculator with amortization schedules, payment breakdowns, 
+                    and refinancing analysis. Perfect for home buyers and refinance decisions.
+                </div>
+                <div class="app-features">
+                    <strong>Features:</strong><br>
+                    • Monthly payment calculations<br>
+                    • Amortization schedules<br>
+                    • Extra payment scenarios<br>
+                    • Refinancing analysis<br>
+                    • Interest vs principal breakdown
+                </div>
+                <a href="https://zaa8dg8owb9crbtms6km6k.streamlit.app/" target="_blank" class="launch-btn">
+                    🚀 Launch App
+                </a>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col7:
+        # Rental vs S&P 500 Comparison App
+        st.markdown("""
+            <div class="app-card">
+                <div class="app-title">🏘️ Rental vs S&P 500 Comparison</div>
+                <div class="app-description">
+                    Compare the long-term returns of investing in rental property versus investing 
+                    the same amount in S&P 500 index funds. Includes all costs and tax implications.
+                </div>
+                <div class="app-features">
+                    <strong>Features:</strong><br>
+                    • Total return comparison<br>
+                    • Cash flow analysis<br>
+                    • Tax implications modeling<br>
+                    • Maintenance & vacancy costs<br>
+                    • Risk-adjusted returns
+                </div>
+                <a href="https://mw56rpzbgawmatwxkhe39a.streamlit.app/" target="_blank" class="launch-btn">
+                    🚀 Launch App
+                </a>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # Tax & Financial Planning Section
+    st.markdown('<div class="section-header">🧾 Tax & Financial Planning</div>', unsafe_allow_html=True)
+
+    col8, col9 = st.columns(2)
+
+    with col8:
         # Tax Estimator App
         st.markdown("""
             <div class="app-card">
@@ -226,7 +277,7 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-    with col7:
+    with col9:
         # Placeholder for future app
         st.markdown("""
             <div class="app-card" style="opacity: 0.7;">
@@ -237,10 +288,10 @@ def main():
                 </div>
                 <div class="app-features">
                     <strong>Planned Features:</strong><br>
-                    • Mortgage calculators<br>
                     • Debt payoff planners<br>
+                    • Budget trackers<br>
                     • Investment comparisons<br>
-                    • Budget trackers
+                    • Financial goal planners
                 </div>
                 <div style="padding: 10px 20px; background-color: #ccc; color: #666; border-radius: 5px; font-weight: bold; text-align: center;">
                     🚧 In Development
@@ -253,16 +304,16 @@ def main():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Total Apps", "6", "1")
+        st.metric("Total Apps", "8", "2")
     
     with col2:
         st.metric("Countries Supported", "US + CA + IN", "🌍")
     
     with col3:
-        st.metric("Categories", "3", "")
+        st.metric("Categories", "4", "1")
     
     with col4:
-        st.metric("Latest Addition", "India Retirement", "🇮🇳")
+        st.metric("Latest Addition", "Real Estate Tools", "🏠")
 
     # App categories section
     st.markdown("---")
@@ -280,9 +331,9 @@ def main():
     with categories_col2:
         st.markdown("""
         **🏖️ Retirement Planning**
-        - US Retirement Planner - 401(k), IRA, Social Security
+        - US Retirement Calculator - 401(k), IRA, Social Security
         - Canadian Retirement Planner - RRSP, TFSA, CPP, OAS, GIS
-        - India Retirement Planner - EPF, NPS, PPF, tax optimization
+        - India Retirement Calculator - EPF, NPS, PPF, tax optimization
         """)
 
     with categories_col3:
@@ -326,7 +377,7 @@ def main():
         st.markdown("""
         **🇺🇸 United States Tools:**
         - US Tax Estimator (Federal taxes)
-        - US Retirement Planner (401k, IRA, Social Security)
+        - US Retirement Calculator (401k, IRA, Social Security)
         - Portfolio Dashboard (US markets focused)
         """)
     
@@ -341,7 +392,7 @@ def main():
     with region_col3:
         st.markdown("""
         **🇮🇳 Indian Tools:**
-        - India Retirement Planner (EPF, NPS, PPF)
+        - India Retirement Calculator (EPF, NPS, PPF)
         - Indian tax system integration
         - Inflation-adjusted expense planning
         - Single & couple retirement scenarios
@@ -360,6 +411,8 @@ def main():
         - Traditional vs Roth IRA comparisons
         - Federal tax bracket optimization
         - 401(k) employer matching scenarios
+        - US mortgage market analysis
+        - S&P 500 historical performance data
         """)
     
     with features_col2:
@@ -391,12 +444,12 @@ def main():
         
         **🤝 Feedback:** Your feedback helps improve these tools. Feel free to reach out with suggestions.
         
-        **🌍 Expanding Coverage:** Now covering US, Canada, and India with specialized retirement planning tools!
+        **🌍 Expanding Coverage:** Now covering US, Canada, and India with specialized tools for retirement planning, real estate, and investment analysis!
     """)
     
     # Last updated info
     st.markdown("---")
-    st.caption("Last updated: December 2024 | Apps are continuously maintained and improved | Now featuring retirement planning for US, Canada, and India!")
+    st.caption("Last updated: December 2024 | Apps are continuously maintained and improved | Now featuring comprehensive real estate and investment comparison tools!")
 
 if __name__ == "__main__":
     main()
