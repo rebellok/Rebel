@@ -10,6 +10,11 @@ imageio[ffmpeg]
 rich
 markdown-it-py
 pygments
+pillow
+tqdm
+decorator
+proglog
+
 
 
 
