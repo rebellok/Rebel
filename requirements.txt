@@ -6,6 +6,15 @@ plotly>=5.15.0
 requests>=2.31.0
 ta>=0.10.1
 opencv-python-headless
+moviepy
+imageio[ffmpeg]
+moviepy
+rich
+markdown-it-py
+pygments
+
+
+
 
 
 
