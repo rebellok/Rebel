@@ -5,13 +5,14 @@ numpy>=1.24.0
 plotly>=5.15.0
 requests>=2.31.0
 ta>=0.10.1
+streamlit
 opencv-python-headless
 moviepy
 imageio[ffmpeg]
-moviepy
 rich
 markdown-it-py
 pygments
+
 
 
 
