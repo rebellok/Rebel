@@ -88,6 +88,80 @@ st.markdown('''
 ''', unsafe_allow_html=True)
 
 
+# --- DYNAMIC TICKER FETCHING FUNCTIONS ---
+@st.cache_data
+def get_sp500_tickers() -> List[str]:
+    """Fetches the list of S&P 500 tickers from Wikipedia."""
+    try:
+        url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+        tables = pd.read_html(url)
+        
+        # Find the correct table - it's usually the first one with company information
+        for table in tables:
+            # Check for common column names in S&P 500 table
+            possible_ticker_columns = ['Symbol', 'Ticker', 'Stock Symbol']
+            for col in possible_ticker_columns:
+                if col in table.columns:
+                    return table[col].tolist()
+            
+            # If no exact match, check for columns containing 'symbol' or 'ticker' (with type checking)
+            for col in table.columns:
+                if isinstance(col, str) and ('symbol' in col.lower() or 'ticker' in col.lower()):
+                    return table[col].tolist()
+        
+        # Fallback: return the first column of the first table if it looks like tickers
+        if not tables[0].empty and len(tables[0].columns) > 0:
+            first_col = tables[0].iloc[:, 0]
+            # Check if first few entries look like stock tickers (3-5 uppercase letters)
+            if all(isinstance(x, str) and x.isupper() and 2 <= len(x) <= 5 for x in first_col.head(5)):
+                return first_col.tolist()
+        
+        return []
+        
+    except Exception as e:
+        st.error(f"Error fetching S&P 500 tickers from Wikipedia: {e}")
+        # Fallback to a predefined list of major S&P 500 stocks
+        return [
+            'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK-B', 'UNH', 'JNJ',
+            'V', 'PG', 'JPM', 'HD', 'MA', 'BAC', 'XOM', 'ABBV', 'PFE', 'KO',
+            'AVGO', 'WMT', 'LLY', 'PEP', 'TMO', 'COST', 'DIS', 'ABT', 'DHR', 'VZ',
+            'ADBE', 'CRM', 'BMY', 'NFLX', 'ACN', 'NKE', 'WFC', 'TXN', 'RTX', 'AMD',
+            'QCOM', 'LIN', 'HON', 'UPS', 'PM', 'SBUX', 'AMGN', 'T', 'LOW', 'IBM'
+        ]
+
+@st.cache_data
+def get_nasdaq100_tickers() -> List[str]:
+    """Fetches the list of Nasdaq 100 tickers from Wikipedia."""
+    try:
+        url = 'https://en.wikipedia.org/wiki/Nasdaq-100'
+        tables = pd.read_html(url)
+        
+        # Find the table with ticker information
+        for table in tables:
+            # Check for common column names
+            possible_ticker_columns = ['Ticker', 'Symbol', 'Stock Symbol']
+            for col in possible_ticker_columns:
+                if col in table.columns:
+                    return table[col].tolist()
+            
+            # Check for columns containing 'ticker' or 'symbol' (with type checking)
+            for col in table.columns:
+                if isinstance(col, str) and ('ticker' in col.lower() or 'symbol' in col.lower()):
+                    return table[col].tolist()
+        
+        return []
+        
+    except Exception as e:
+        st.error(f"Error fetching Nasdaq 100 tickers from Wikipedia: {e}")
+        # Fallback to a predefined list of major Nasdaq 100 stocks
+        return [
+            'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'ADBE', 'CRM',
+            'PYPL', 'INTC', 'CSCO', 'PEP', 'AVGO', 'TXN', 'QCOM', 'AMD', 'AMAT', 'INTU',
+            'ISRG', 'BKNG', 'MU', 'ADI', 'ADP', 'GILD', 'MELI', 'MDLZ', 'LRCX', 'REGN',
+            'KLAC', 'SNPS', 'CDNS', 'MAR', 'ORLY', 'CSX', 'ABNB', 'NXPI', 'WDAY', 'FTNT'
+        ]
+
+
 class TechnicalIndicators:
     """Calculate various technical indicators"""
    
@@ -154,13 +228,15 @@ class SignalGenerator:
     def __init__(self):
         self.ti = TechnicalIndicators()
    
-    def analyze_stock(self, symbol: str, period: str = "6mo") -> Dict:
+    def analyze_stock(self, ticker: str, period: str = "6mo", country: str = "US") -> Dict:
         """Comprehensive stock analysis"""
+        full_ticker = self._get_full_ticker(ticker, country)
+       
         try:
             # Fetch data
-            ticker = yf.Ticker(symbol)
-            hist = ticker.history(period=period)
-            info = ticker.info
+            stock = yf.Ticker(full_ticker)
+            hist = stock.history(period=period)
+            info = stock.info
            
             if hist.empty:
                 return None
@@ -197,7 +273,8 @@ class SignalGenerator:
             price_change_5d = ((current_price - close.iloc[-6]) / close.iloc[-6]) * 100 if len(close) >= 6 else 0
            
             return {
-                'symbol': symbol,
+                'Ticker': ticker,
+                'full_ticker': full_ticker,
                 'current_price': current_price,
                 'price_change_1d': price_change_1d,
                 'price_change_5d': price_change_5d,
@@ -216,8 +293,19 @@ class SignalGenerator:
             }
            
         except Exception as e:
-            st.warning(f"Error analyzing {symbol}: {str(e)}")
+            st.warning(f"Error analyzing {ticker} ({full_ticker}): {str(e)}")
             return None
+   
+    def _get_full_ticker(self, ticker: str, country: str) -> str:
+        """Appends the correct Yahoo Finance suffix based on country"""
+        if country == "Canada":
+            return f"{ticker}.TO"
+        elif country == "India":
+            return f"{ticker}.NS"
+        elif country == "Australia":
+            return f"{ticker}.AX"
+        else: # Default to US
+            return ticker
    
     def _generate_signals(self, price, rsi, macd, signal, ma, bb, stoch, info) -> Dict:
         """Generate individual trading signals"""
@@ -324,24 +412,26 @@ class OptionsAnalyzer:
     def __init__(self):
         self.signal_gen = SignalGenerator()
    
-    def analyze_options_flow(self, symbol: str) -> Dict:
+    def analyze_options_flow(self, ticker: str, country: str = "US") -> Dict:
         """Analyze options flow for signals"""
+        full_ticker = self.signal_gen._get_full_ticker(ticker, country)
+       
         try:
-            ticker = yf.Ticker(symbol)
+            stock = yf.Ticker(full_ticker)
            
             # Get current stock price
-            info = ticker.info
+            info = stock.info
             current_price = info.get('currentPrice', 0)
            
             if current_price == 0:
-                hist = ticker.history(period="1d")
+                hist = stock.history(period="1d")
                 if not hist.empty:
                     current_price = hist['Close'].iloc[-1]
                 else:
                     return None
            
             # Get options data
-            exp_dates = ticker.options
+            exp_dates = stock.options
             if not exp_dates:
                 return None
            
@@ -350,7 +440,7 @@ class OptionsAnalyzer:
             # Analyze first few expirations
             for exp_date in exp_dates[:3]:
                 try:
-                    chain = ticker.option_chain(exp_date)
+                    chain = stock.option_chain(exp_date)
                    
                     # Process calls
                     calls = chain.calls.copy()
@@ -377,7 +467,7 @@ class OptionsAnalyzer:
             signals = self._calculate_options_signals(options_df, current_price)
            
             return {
-                'symbol': symbol,
+                'Ticker': ticker,
                 'current_price': current_price,
                 'total_call_volume': options_df[options_df['type'] == 'call']['volume'].sum(),
                 'total_put_volume': options_df[options_df['type'] == 'put']['volume'].sum(),
@@ -452,35 +542,42 @@ class StockScreener:
     def __init__(self):
         self.signal_gen = SignalGenerator()
        
-        # Popular stock lists
-        self.sp500_sample = [
-            'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK-B', 'UNH', 'JNJ',
-            'V', 'PG', 'JPM', 'HD', 'MA', 'CVX', 'ABBV', 'PFE', 'KO', 'BAC',
-            'PEP', 'TMO', 'COST', 'AVGO', 'DIS', 'ABT', 'CRM', 'NFLX', 'ADBE', 'XOM'
-        ]
-       
-        self.growth_stocks = [
-            'NVDA', 'AMD', 'TSLA', 'CRM', 'SNOW', 'ZM', 'ROKU', 'SQ', 'SHOP', 'TWLO',
-            'OKTA', 'CRWD', 'ZS', 'DDOG', 'NET', 'PLTR', 'U', 'FVRR', 'UPWK'
-        ]
-       
-        self.dividend_stocks = [
-            'KO', 'PEP', 'JNJ', 'PG', 'T', 'VZ', 'XOM', 'CVX', 'MMM', 'CAT',
-            'IBM', 'WMT', 'MCD', 'O', 'VTI', 'SPY', 'SCHD'
-        ]
+        # Dynamic stock lists pulled from Wikipedia with fallbacks
+        self.stock_lists = {
+            "US - S&P 500": get_sp500_tickers(),
+            "US - Nasdaq 100": get_nasdaq100_tickers(),
+            "US - S&P 500 Sample": [
+                'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK-B', 'UNH', 'JNJ'
+            ],
+            "US - Growth Stocks": [
+                'NVDA', 'AMD', 'TSLA', 'CRM', 'SNOW', 'ZM', 'ROKU', 'SQ', 'SHOP', 'TWLO'
+            ],
+            "US - Dividend Stocks": [
+                'KO', 'PEP', 'JNJ', 'PG', 'T', 'VZ', 'XOM', 'CVX', 'MMM', 'CAT'
+            ],
+            "Canada - TSX Sample": [
+                'RY', 'TD', 'ENB', 'BMO', 'CNR', 'SU', 'SHOP', 'BNS', 'CNQ', 'MG'
+            ],
+            "India - Nifty 50 Sample": [
+                'RELIANCE', 'TCS', 'HDFCBANK', 'INFY', 'ICICIBANK', 'HINDUNILVR', 'ITC', 'KOTAKBANK'
+            ],
+            "Australia - ASX 200 Sample": [
+                'BHP', 'CBA', 'CSL', 'NAB', 'WBC', 'MQG', 'ANZ', 'RIO', 'WES', 'WOW'
+            ]
+        }
    
-    def screen_stocks(self, stock_list: List[str], filters: Dict) -> pd.DataFrame:
+    def screen_stocks(self, stock_list: List[str], country: str, filters: Dict) -> pd.DataFrame:
         """Screen stocks based on filters"""
         results = []
        
         progress_bar = st.progress(0)
         status_text = st.empty()
        
-        for i, symbol in enumerate(stock_list):
-            status_text.text(f"Analyzing {symbol}... ({i+1}/{len(stock_list)})")
+        for i, ticker in enumerate(stock_list):
+            status_text.text(f"Analyzing {ticker}... ({i+1}/{len(stock_list)})")
             progress_bar.progress((i + 1) / len(stock_list))
            
-            analysis = self.signal_gen.analyze_stock(symbol)
+            analysis = self.signal_gen.analyze_stock(ticker, country=country)
             if analysis:
                 # Apply filters
                 if self._passes_filters(analysis, filters):
@@ -541,13 +638,11 @@ components = get_components()
 # Sidebar
 st.sidebar.title("🔧 Control Panel")
 
-
 # Analysis Type
 analysis_type = st.sidebar.radio(
     "Analysis Type",
     ["📈 Stock Screener", "🎯 Individual Stock Analysis", "📊 Options Flow Analysis", "📋 Custom Watchlist"]
 )
-
 
 # Stock Screener Section
 if analysis_type == "📈 Stock Screener":
@@ -557,24 +652,26 @@ if analysis_type == "📈 Stock Screener":
     col1, col2 = st.columns(2)
    
     with col1:
+        country = st.selectbox(
+            "Select Country",
+            ["US", "Canada", "India", "Australia"]
+        )
+       
+        stock_list_options = [key for key in components['screener'].stock_lists.keys() if country in key or "Custom" in key]
         stock_list_type = st.selectbox(
             "Stock Universe",
-            ["S&P 500 Sample", "Growth Stocks", "Dividend Stocks", "Custom List"]
+            stock_list_options + ["Custom List"]
         )
        
         if stock_list_type == "Custom List":
-            custom_symbols = st.text_area(
-                "Enter symbols (one per line)",
+            custom_tickers = st.text_area(
+                "Enter Tickers (one per line)",
                 placeholder="AAPL\nMSFT\nGOOGL\nTSLA",
-                help="Enter stock symbols, one per line"
+                help="Enter stock tickers, one per line (no suffixes needed)"
             ).strip().split('\n')
-            stock_universe = [s.strip().upper() for s in custom_symbols if s.strip()]
+            stock_universe = [s.strip().upper() for s in custom_tickers if s.strip()]
         else:
-            stock_universe = {
-                "S&P 500 Sample": components['screener'].sp500_sample,
-                "Growth Stocks": components['screener'].growth_stocks,
-                "Dividend Stocks": components['screener'].dividend_stocks
-            }[stock_list_type]
+            stock_universe = components['screener'].stock_lists[stock_list_type]
    
     with col2:
         # Filters
@@ -603,7 +700,7 @@ if analysis_type == "📈 Stock Screener":
         }
        
         with st.spinner("🔍 Screening stocks..."):
-            results_df = components['screener'].screen_stocks(stock_universe[:20], filters)
+            results_df = components['screener'].screen_stocks(stock_universe[:100], country, filters)
        
         if not results_df.empty:
             # Sort by technical score
@@ -628,10 +725,10 @@ if analysis_type == "📈 Stock Screener":
                 st.metric("🏢 Total Market Cap", f"${total_market_cap:.1f}B")
            
             # Results table
-            display_df = results_df[['symbol', 'current_price', 'price_change_1d', 'volume',
+            display_df = results_df[['Ticker', 'full_ticker', 'current_price', 'price_change_1d', 'volume',
                                    'rsi', 'technical_score', 'recommendation']].copy()
            
-            display_df.columns = ['Symbol', 'Price', '1D Change %', 'Volume', 'RSI', 'Tech Score', 'Signal']
+            display_df.columns = ['Ticker', 'Full Ticker', 'Price', '1D Change %', 'Volume', 'RSI', 'Tech Score', 'Signal']
             display_df['Price'] = display_df['Price'].apply(lambda x: f"${x:.2f}")
             display_df['1D Change %'] = display_df['1D Change %'].apply(lambda x: f"{x:.2f}%")
             display_df['Volume'] = display_df['Volume'].apply(lambda x: f"{x:,.0f}")
@@ -685,17 +782,20 @@ if analysis_type == "📈 Stock Screener":
 elif analysis_type == "🎯 Individual Stock Analysis":
     st.header("🎯 Individual Stock Analysis")
    
-    col1, col2 = st.columns([2, 1])
+    col1, col2, col3 = st.columns([2, 1, 1])
    
     with col1:
-        symbol = st.text_input("Enter Stock Symbol", value="AAPL", placeholder="e.g., AAPL, MSFT, GOOGL").upper()
+        ticker = st.text_input("Enter Stock Ticker", value="AAPL", placeholder="e.g., AAPL, MSFT, GOOGL").upper()
    
     with col2:
+        country = st.selectbox("Select Country", ["US", "Canada", "India", "Australia"])
+   
+    with col3:
         period = st.selectbox("Analysis Period", ["1mo", "3mo", "6mo", "1y", "2y"])
    
     if st.button("🔍 Analyze Stock", type="primary"):
-        with st.spinner(f"🔍 Analyzing {symbol}..."):
-            analysis = components['signal_gen'].analyze_stock(symbol, period)
+        with st.spinner(f"🔍 Analyzing {ticker}..."):
+            analysis = components['signal_gen'].analyze_stock(ticker, period, country)
        
         if analysis:
             # Display key metrics
@@ -749,8 +849,8 @@ elif analysis_type == "🎯 Individual Stock Analysis":
             st.subheader("Technical Analysis Chart")
            
             # Fetch historical data for charting
-            ticker = yf.Ticker(symbol)
-            hist = ticker.history(period=period)
+            stock = yf.Ticker(analysis['full_ticker'])
+            hist = stock.history(period=period)
            
             if not hist.empty:
                 # Calculate indicators for plotting
@@ -836,7 +936,7 @@ elif analysis_type == "🎯 Individual Stock Analysis":
                     )
                
                 fig.update_layout(
-                    title=f"{symbol} Technical Analysis",
+                    title=f"{analysis['full_ticker']} Technical Analysis",
                     height=800,
                     showlegend=True,
                     xaxis_rangeslider_visible=False
@@ -868,24 +968,27 @@ elif analysis_type == "🎯 Individual Stock Analysis":
                 st.info(insight)
        
         else:
-            st.error(f"Unable to analyze {symbol}. Please check the symbol and try again.")
+            st.error(f"Unable to analyze {ticker}. Please check the ticker and try again.")
 
 
 # Options Flow Analysis
 elif analysis_type == "📊 Options Flow Analysis":
     st.header("📊 Options Flow Analysis")
    
-    col1, col2 = st.columns([2, 1])
+    col1, col2, col3 = st.columns([2, 1, 1])
    
     with col1:
-        options_symbol = st.text_input("Enter Stock Symbol for Options", value="AAPL", placeholder="e.g., AAPL, TSLA, NVDA").upper()
+        options_ticker = st.text_input("Enter Stock Ticker for Options", value="AAPL", placeholder="e.g., AAPL, TSLA, NVDA").upper()
    
     with col2:
+        options_country = st.selectbox("Select Country", ["US", "Canada", "India", "Australia"], key="options_country")
+   
+    with col3:
         min_volume = st.number_input("Min Options Volume", min_value=0, value=10)
    
     if st.button("🎯 Analyze Options Flow", type="primary"):
-        with st.spinner(f"🔍 Analyzing options flow for {options_symbol}..."):
-            options_analysis = components['options_analyzer'].analyze_options_flow(options_symbol)
+        with st.spinner(f"🔍 Analyzing options flow for {options_ticker}..."):
+            options_analysis = components['options_analyzer'].analyze_options_flow(options_ticker, options_country)
        
         if options_analysis:
             # Key metrics
@@ -991,7 +1094,7 @@ elif analysis_type == "📊 Options Flow Analysis":
                 st.warning(f"⚠️ No options contracts found with volume >= {min_volume}")
        
         else:
-            st.error(f"❌ Unable to analyze options for {options_symbol}. Please check the symbol and try again.")
+            st.error(f"❌ Unable to analyze options for {options_ticker}. Please check the ticker and try again.")
 
 
 # Custom Watchlist
@@ -1002,13 +1105,15 @@ elif analysis_type == "📋 Custom Watchlist":
    
     with col1:
         watchlist_input = st.text_area(
-            "Enter your watchlist (one symbol per line)",
-            placeholder="AAPL\nMSFT\nGOOGL\nTSLA\nNVDA\nAMD\nMETA\nAMZN",
-            height=200
+            "Enter your watchlist (one ticker per line)",
+            placeholder="AAPL\nMSFT\nRELIANCE\nBHP",
+            height=200,
+            help="Enter stock tickers, one per line (no suffixes needed)"
         )
    
     with col2:
         st.subheader("⚙️ Analysis Options")
+        watchlist_country = st.selectbox("Select Country", ["US", "Canada", "India", "Australia"], key="watchlist_country")
         include_options = st.checkbox("Include Options Analysis", value=False)
         sort_by = st.selectbox(
             "Sort Results By",
@@ -1019,30 +1124,33 @@ elif analysis_type == "📋 Custom Watchlist":
    
     if st.button("📊 Analyze Watchlist", type="primary"):
         if watchlist_input.strip():
-            symbols = [s.strip().upper() for s in watchlist_input.strip().split('\n') if s.strip()]
+            tickers = [s.strip().upper() for s in watchlist_input.strip().split('\n') if s.strip()]
            
-            if symbols:
+            if tickers:
                 results = []
                 options_results = []
                
                 progress_bar = st.progress(0)
                 status_text = st.empty()
                
-                for i, symbol in enumerate(symbols):
-                    status_text.text(f"Analyzing {symbol}... ({i+1}/{len(symbols)})")
-                    progress_bar.progress((i + 1) / len(symbols))
+                for i, ticker in enumerate(tickers):
+                    status_text.text(f"Analyzing {ticker}... ({i+1}/{len(tickers)})")
+                    progress_bar.progress((i + 1) / len(tickers))
                    
                     # Stock analysis
-                    stock_analysis = components['signal_gen'].analyze_stock(symbol)
+                    stock_analysis = components['signal_gen'].analyze_stock(ticker, country=watchlist_country)
                     if stock_analysis:
                         results.append(stock_analysis)
                    
-                    # Options analysis if requested
-                    if include_options:
-                        options_analysis = components['options_analyzer'].analyze_options_flow(symbol)
+                    # Options analysis if requested and available for country
+                    if include_options and watchlist_country == "US":
+                        options_analysis = components['options_analyzer'].analyze_options_flow(ticker, watchlist_country)
                         if options_analysis:
                             options_results.append(options_analysis)
-               
+                    elif include_options and watchlist_country != "US":
+                        st.warning("⚠️ Options analysis is only available for US tickers due to Yahoo Finance data limitations.")
+                        include_options = False  # Disable for this run
+
                 progress_bar.empty()
                 status_text.empty()
                
@@ -1081,13 +1189,12 @@ elif analysis_type == "📋 Custom Watchlist":
                         high_vol = len(results_df[results_df['volume'] > results_df['avg_volume'] * 1.5])
                         st.metric("📊 High Volume", f"{high_vol}/{len(results_df)}")
                    
-                    # Main results table
-                    st.subheader("📋 Watchlist Analysis Results")
-                   
+                    # Main results display
                     if show_details:
-                        # Detailed view with all signals
+                        # Detailed expandable view
+                        st.subheader("📋 Detailed Analysis Results")
                         for _, row in results_df.iterrows():
-                            with st.expander(f"📊 {row['symbol']} - {row['recommendation']} (Score: {row['technical_score']:.1f})"):
+                            with st.expander(f"📊 {row['full_ticker']} - {row['recommendation']} (Score: {row['technical_score']:.1f})"):
                                 col1, col2, col3 = st.columns(3)
                                
                                 with col1:
@@ -1111,10 +1218,11 @@ elif analysis_type == "📋 Custom Watchlist":
                                             st.warning(f"{indicator.upper()}: {signal}")
                     else:
                         # Compact table view
-                        display_df = results_df[['symbol', 'current_price', 'price_change_1d', 'volume',
+                        st.subheader("📋 Watchlist Summary")
+                        display_df = results_df[['Ticker', 'full_ticker', 'current_price', 'price_change_1d', 'volume',
                                                'rsi', 'technical_score', 'recommendation']].copy()
                        
-                        display_df.columns = ['Symbol', 'Price', '1D Change %', 'Volume', 'RSI', 'Tech Score', 'Signal']
+                        display_df.columns = ['Ticker', 'Full Ticker', 'Price', '1D Change %', 'Volume', 'RSI', 'Tech Score', 'Signal']
                         display_df['Price'] = display_df['Price'].apply(lambda x: f"${x:.2f}")
                         display_df['1D Change %'] = display_df['1D Change %'].apply(lambda x: f"{x:+.2f}%")
                         display_df['Volume'] = display_df['Volume'].apply(lambda x: f"{x:,.0f}")
@@ -1142,9 +1250,9 @@ elif analysis_type == "📋 Custom Watchlist":
                         # Technical scores
                         fig1 = px.bar(
                             results_df,
-                            x='symbol',
+                            x='Ticker',
                             y='technical_score',
-                            title="Technical Scores by Symbol",
+                            title="Technical Scores by Ticker",
                             color='technical_score',
                             color_continuous_scale='RdYlGn'
                         )
@@ -1172,7 +1280,7 @@ elif analysis_type == "📋 Custom Watchlist":
                             cp_ratio = call_vol / put_vol if put_vol > 0 else float('inf')
                            
                             options_summary.append({
-                                'Symbol': opt['symbol'],
+                                'Ticker': opt['Ticker'],
                                 'Call Volume': f"{call_vol:,.0f}",
                                 'Put Volume': f"{put_vol:,.0f}",
                                 'C/P Ratio': f"{cp_ratio:.2f}" if cp_ratio != float('inf') else "∞",
@@ -1180,26 +1288,27 @@ elif analysis_type == "📋 Custom Watchlist":
                                 'Unusual Activity': signals.get('unusual_activity', 'NEUTRAL')
                             })
                        
-                        options_df = pd.DataFrame(options_summary)
-                       
-                        def highlight_options_signals(row):
-                            colors = []
-                            for col in row.index:
-                                if col in ['Flow Signal', 'Unusual Activity']:
-                                    if row[col] == 'BUY':
-                                        colors.append('background-color: #d4edda')
-                                    elif row[col] == 'SELL':
-                                        colors.append('background-color: #f8d7da')
+                        if options_summary:
+                            options_df = pd.DataFrame(options_summary)
+                           
+                            def highlight_options_signals(row):
+                                colors = []
+                                for col in row.index:
+                                    if col in ['Flow Signal', 'Unusual Activity']:
+                                        if row[col] == 'BUY':
+                                            colors.append('background-color: #d4edda')
+                                        elif row[col] == 'SELL':
+                                            colors.append('background-color: #f8d7da')
+                                        else:
+                                            colors.append('background-color: #fff3cd')
                                     else:
-                                        colors.append('background-color: #fff3cd')
-                                else:
-                                    colors.append('')
-                            return colors
-                       
-                        st.dataframe(
-                            options_df.style.apply(highlight_options_signals, axis=1),
-                            use_container_width=True
-                        )
+                                        colors.append('')
+                                return colors
+                           
+                            st.dataframe(
+                                options_df.style.apply(highlight_options_signals, axis=1),
+                                use_container_width=True
+                            )
                    
                     # Export functionality
                     st.subheader("💾 Export Results")
@@ -1226,11 +1335,11 @@ elif analysis_type == "📋 Custom Watchlist":
                             )
                
                 else:
-                    st.error("❌ Unable to analyze any symbols from your watchlist. Please check the symbols and try again.")
+                    st.error("❌ Unable to analyze any tickers from your watchlist. Please check the tickers and try again.")
             else:
-                st.warning("⚠️ Please enter at least one valid stock symbol.")
+                st.warning("⚠️ Please enter at least one valid stock ticker.")
         else:
-            st.warning("⚠️ Please enter your watchlist symbols.")
+            st.warning("⚠️ Please enter your watchlist tickers.")
 
 
 # Sidebar information
@@ -1240,18 +1349,16 @@ st.sidebar.markdown("""
 **Features:**
 - Real-time stock analysis
 - Technical indicators (RSI, MACD, Bollinger Bands)
-- Options flow analysis
+- Options flow analysis (US only)
 - Advanced screening
 - Buy/Sell signals
 - Custom watchlists
-
 
 **Data Sources:**
 - Yahoo Finance (Free)
 - Real-time quotes
 - Options chains
 - Historical data
-
 
 **Technical Indicators:**
 - RSI (Relative Strength Index)
@@ -1261,13 +1368,11 @@ st.sidebar.markdown("""
 - Stochastic Oscillator
 - Volume Analysis
 
-
 **Signal Generation:**
 - Multi-factor analysis
 - Weighted scoring system
 - Risk assessment
 - Market sentiment
-
 
 **Disclaimer:**
 This tool is for educational purposes only. Not financial advice. Always do your own research before making investment decisions.
@@ -1279,11 +1384,10 @@ st.sidebar.markdown("---")
 st.sidebar.subheader("Performance Tips")
 st.sidebar.markdown("""
 **For best results:**
-- Limit watchlists to 20-30 symbols
+- Limit watchlists to 20-30 tickers
 - Use shorter analysis periods for faster loading
 - Enable options analysis only when needed
 - Clear browser cache if experiencing issues
-
 
 **Signal Interpretation:**
 - **STRONG BUY**: Multiple bullish signals
@@ -1303,10 +1407,3 @@ st.markdown("""
     <p><small>Always conduct your own research and consider consulting with a financial advisor before making investment decisions.</small></p>
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
-
-
-
