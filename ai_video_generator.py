@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 from moviepy.editor import *
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps, ImageDraw, ImageFont
-from moviepy.video.fx.all import speedx,fadein,fadeout
 import pandas as pd
 import io
 import tempfile
