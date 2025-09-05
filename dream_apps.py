@@ -100,7 +100,7 @@ def main():
 
 
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
 
 
@@ -197,32 +197,6 @@ def main():
                     • Real vs nominal projections
                 </div>
                 <a href="https://hrrudb5khytu6eknn4g7vs.streamlit.app/" target="_blank" class="launch-btn">
-                    🚀 Launch App
-                </a>
-            </div>
-        """, unsafe_allow_html=True)
-
-
-
-
-    with col3:
-        # General Retirement Planner App (NEW)
-        st.markdown("""
-            <div class="app-card">
-                <div class="app-title">🎯 Retirement Planner</div>
-                <div class="app-description">
-                    Universal retirement planning tool with flexible scenarios and comprehensive analysis.
-                    Perfect for general retirement planning across different situations and goals.
-                </div>
-                <div class="app-features">
-                    <strong>Features:</strong><br>
-                    • Flexible retirement scenarios<br>
-                    • Multi-asset portfolio modeling<br>
-                    • Income replacement analysis<br>
-                    • Withdrawal strategy optimization<br>
-                    • Risk assessment tools
-                </div>
-                <a href="https://lvxqkzbhvuffmpx2oznqcs.streamlit.app/" target="_blank" class="launch-btn">
                     🚀 Launch App
                 </a>
             </div>
@@ -387,12 +361,12 @@ def main():
 
 
 
-    col7, col8 = st.columns(2)
+    col8, col9 = st.columns(2)
 
 
 
 
-    with col7:
+    with col8:
         # Portfolio Dashboard App
         st.markdown("""
             <div class="app-card">
@@ -417,7 +391,7 @@ def main():
 
 
 
-    with col8:
+    with col9:
         # Unusual Options Activity App
         st.markdown("""
             <div class="app-card">
@@ -445,19 +419,19 @@ def main():
 
     # Quick stats
     st.markdown("---")
-    col1, col2, col3, col4 = st.columns(4)
+    col_stat1, col_stat2, col_stat3, col_stat4 = st.columns(4)
    
-    with col1:
-        st.metric("Total Apps", "12", "2")
+    with col_stat1:
+        st.metric("Total Apps", "11", "1")
    
-    with col2:
+    with col_stat2:
         st.metric("Countries Supported", "US + CA + IN + AU", "🌍")
    
-    with col3:
+    with col_stat3:
         st.metric("Categories", "4", "1")
    
-    with col4:
-        st.metric("Latest Addition", "IRMAA & General Retirement", "🏥🎯")
+    with col_stat4:
+        st.metric("Latest Addition", "IRMAA Medicare Planning", "🏥")
 
 
 
@@ -475,7 +449,6 @@ def main():
         - Canadian Retirement Planner - RRSP, TFSA, CPP, OAS, GIS
         - India Retirement Calculator - EPF, NPS, PPF, tax optimization
         - Australia Retirement Calculator - Superannuation & Age Pension
-        - General Retirement Planner - Universal planning tool
         """)
    
     with categories_col2:
