@@ -16,6 +16,8 @@ tqdm
 decorator
 proglog
 pillow_heif
+feedparser
+matplotlib
 
 
 
