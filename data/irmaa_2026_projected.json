@@ -1,0 +1,24 @@
+{
+  "year": 2026,
+  "note": "PROJECTED values for 2026 (use as estimates). 2026 figures are projected by reliable outlets — confirm with CMS/SSA when official figures are released.",
+  "standard_part_b": 186.90,
+  "part_d_base": 38.99,
+  "brackets": {
+    "single": [
+      {"min": 0, "max": 109000, "part_b_total": 186.90, "part_d_extra": 0.0},
+      {"min": 109001, "max": 137000, "part_b_total": 261.70, "part_d_extra": 14.5},
+      {"min": 137001, "max": 171000, "part_b_total": 373.80, "part_d_extra": 37.5},
+      {"min": 171001, "max": 205000, "part_b_total": 485.90, "part_d_extra": 60.4},
+      {"min": 205001, "max": 500000, "part_b_total": 598.10, "part_d_extra": 83.3},
+      {"min": 500001, "max": null, "part_b_total": 635.50, "part_d_extra": 91.0}
+    ],
+    "married": [
+      {"min": 0, "max": 218000, "part_b_total": 186.90, "part_d_extra": 0.0},
+      {"min": 218001, "max": 274000, "part_b_total": 261.70, "part_d_extra": 14.5},
+      {"min": 274001, "max": 342000, "part_b_total": 373.80, "part_d_extra": 37.5},
+      {"min": 342001, "max": 410000, "part_b_total": 485.90, "part_d_extra": 60.4},
+      {"min": 410001, "max": 750000, "part_b_total": 598.10, "part_d_extra": 83.3},
+      {"min": 750001, "max": null, "part_b_total": 635.50, "part_d_extra": 91.0}
+    ]
+  }
+}

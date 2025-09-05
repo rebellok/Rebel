@@ -1,0 +1,24 @@
+{
+  "year": 2025,
+  "note": "Official 2025 amounts: standard Part B = 185.00; Part D base = 36.78. IRMAA uses 2023 MAGI.",
+  "standard_part_b": 185.00,
+  "part_d_base": 36.78,
+  "brackets": {
+    "single": [
+      {"min": 0, "max": 106000, "part_b_total": 185.00, "part_d_extra": 0.0},
+      {"min": 106001, "max": 133000, "part_b_total": 259.00, "part_d_extra": 13.7},
+      {"min": 133001, "max": 167000, "part_b_total": 370.00, "part_d_extra": 35.3},
+      {"min": 167001, "max": 200000, "part_b_total": 480.90, "part_d_extra": 57.0},
+      {"min": 200001, "max": 500000, "part_b_total": 591.90, "part_d_extra": 78.6},
+      {"min": 500001, "max": null, "part_b_total": 628.90, "part_d_extra": 85.8}
+    ],
+    "married": [
+      {"min": 0, "max": 212000, "part_b_total": 185.00, "part_d_extra": 0.0},
+      {"min": 212001, "max": 266000, "part_b_total": 259.00, "part_d_extra": 13.7},
+      {"min": 266001, "max": 334000, "part_b_total": 370.00, "part_d_extra": 35.3},
+      {"min": 334001, "max": 400000, "part_b_total": 480.90, "part_d_extra": 57.0},
+      {"min": 400001, "max": 750000, "part_b_total": 591.90, "part_d_extra": 78.6},
+      {"min": 750001, "max": null, "part_b_total": 628.90, "part_d_extra": 85.8}
+    ]
+  }
+}

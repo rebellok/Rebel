@@ -1,1 +1,24 @@
-
+{
+  "year": 2023,
+  "note": "Official CMS/SSA 2023 amounts. Part B standard premium = 164.90; Part D base = 32.74. IRMAA applied based on 2021 MAGI for 2023 determinations.",
+  "standard_part_b": 164.90,
+  "part_d_base": 32.74,
+  "brackets": {
+    "single": [
+      {"min": 0, "max": 97000, "part_b_total": 164.90, "part_d_extra": 0.0},
+      {"min": 97001, "max": 123000, "part_b_total": 244.60, "part_d_extra": 12.9},
+      {"min": 123001, "max": 153000, "part_b_total": 349.40, "part_d_extra": 33.3},
+      {"min": 153001, "max": 183000, "part_b_total": 454.20, "part_d_extra": 53.8},
+      {"min": 183001, "max": 500000, "part_b_total": 559.00, "part_d_extra": 74.2},
+      {"min": 500001, "max": null, "part_b_total": 594.00, "part_d_extra": 81.0}
+    ],
+    "married": [
+      {"min": 0, "max": 194000, "part_b_total": 164.90, "part_d_extra": 0.0},
+      {"min": 194001, "max": 246000, "part_b_total": 244.60, "part_d_extra": 12.9},
+      {"min": 246001, "max": 306000, "part_b_total": 349.40, "part_d_extra": 33.3},
+      {"min": 306001, "max": 366000, "part_b_total": 454.20, "part_d_extra": 53.8},
+      {"min": 366001, "max": 750000, "part_b_total": 559.00, "part_d_extra": 74.2},
+      {"min": 750001, "max": null, "part_b_total": 594.00, "part_d_extra": 81.0}
+    ]
+  }
+}
