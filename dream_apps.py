@@ -100,7 +100,7 @@ def main():
 
 
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
 
 
@@ -205,6 +205,32 @@ def main():
 
 
 
+    with col3:
+        # General Retirement Planner App (NEW)
+        st.markdown("""
+            <div class="app-card">
+                <div class="app-title">🎯 Retirement Planner</div>
+                <div class="app-description">
+                    Universal retirement planning tool with flexible scenarios and comprehensive analysis.
+                    Perfect for general retirement planning across different situations and goals.
+                </div>
+                <div class="app-features">
+                    <strong>Features:</strong><br>
+                    • Flexible retirement scenarios<br>
+                    • Multi-asset portfolio modeling<br>
+                    • Income replacement analysis<br>
+                    • Withdrawal strategy optimization<br>
+                    • Risk assessment tools
+                </div>
+                <a href="https://lvxqkzbhvuffmpx2oznqcs.streamlit.app/" target="_blank" class="launch-btn">
+                    🚀 Launch App
+                </a>
+            </div>
+        """, unsafe_allow_html=True)
+
+
+
+
     # Real Estate & Mortgage Tools Section
     st.markdown('<div class="section-header">🏠 Real Estate & Mortgage Tools</div>', unsafe_allow_html=True)
 
@@ -274,7 +300,7 @@ def main():
 
 
 
-    col5, col6 = st.columns(2)
+    col5, col6, col7 = st.columns(3)
 
 
 
@@ -321,6 +347,32 @@ def main():
                     • Multiple compounding frequencies
                 </div>
                 <a href="https://ixcfeveoappfxmpbr4akpk7.streamlit.app/" target="_blank" class="launch-btn">
+                    🚀 Launch App
+                </a>
+            </div>
+        """, unsafe_allow_html=True)
+
+
+
+
+    with col7:
+        # IRMAA Expense App (NEW)
+        st.markdown("""
+            <div class="app-card">
+                <div class="app-title">🏥 IRMAA Expense Calculator</div>
+                <div class="app-description">
+                    Calculate Medicare Income-Related Monthly Adjustment Amount (IRMAA) surcharges based on income.
+                    Essential for high-income retirees planning Medicare costs and tax strategies.
+                </div>
+                <div class="app-features">
+                    <strong>Features:</strong><br>
+                    • IRMAA Part B & Part D calculations<br>
+                    • Income threshold analysis<br>
+                    • Tax strategy implications<br>
+                    • Multi-year planning scenarios<br>
+                    • Cost optimization strategies
+                </div>
+                <a href="https://t3dzsuaoi2tdxpofjwtxa8.streamlit.app/" target="_blank" class="launch-btn">
                     🚀 Launch App
                 </a>
             </div>
@@ -396,7 +448,7 @@ def main():
     col1, col2, col3, col4 = st.columns(4)
    
     with col1:
-        st.metric("Total Apps", "10", "2")
+        st.metric("Total Apps", "12", "2")
    
     with col2:
         st.metric("Countries Supported", "US + CA + IN + AU", "🌍")
@@ -405,7 +457,7 @@ def main():
         st.metric("Categories", "4", "1")
    
     with col4:
-        st.metric("Latest Addition", "Options Flow & AU Retirement", "🇦🇺📊")
+        st.metric("Latest Addition", "IRMAA & General Retirement", "🏥🎯")
 
 
 
@@ -423,6 +475,7 @@ def main():
         - Canadian Retirement Planner - RRSP, TFSA, CPP, OAS, GIS
         - India Retirement Calculator - EPF, NPS, PPF, tax optimization
         - Australia Retirement Calculator - Superannuation & Age Pension
+        - General Retirement Planner - Universal planning tool
         """)
    
     with categories_col2:
@@ -440,6 +493,7 @@ def main():
         **🧾 Tax & Financial Planning**
         - US Tax Estimator - Federal tax calculations
         - Interest Calculator - Compound interest with advanced features
+        - IRMAA Expense Calculator - Medicare surcharge planning
         """)
 
 
@@ -457,7 +511,7 @@ def main():
 
     # Regional Focus section
     st.markdown("---")
-    st.subheader("🌎 Regional Coverage")
+    st.subheader("🌍 Regional Coverage")
    
     region_col1, region_col2, region_col3, region_col4 = st.columns(4)
    
@@ -466,6 +520,7 @@ def main():
         **🇺🇸 United States Tools:**
         - US Tax Estimator (Federal taxes)
         - US Retirement Calculator (401k, IRA, Social Security)
+        - IRMAA Expense Calculator (Medicare surcharges)
         - Unusual Options Activity (US markets)
         - Portfolio Dashboard (US markets focused)
         """)
@@ -521,6 +576,7 @@ def main():
         - US mortgage market analysis
         - S&P 500 historical performance data
         - Real-time US options market data
+        - IRMAA Medicare surcharge calculations
         """)
    
     with features_col2:
@@ -570,6 +626,7 @@ def main():
         - Apps are optimized for both desktop and mobile
         - Try different scenarios to explore possibilities
         - Use retirement calculators first for long-term planning
+        - IRMAA calculator is essential for high-income retirees
         """)
    
     with tips_col2:
@@ -596,20 +653,15 @@ def main():
        
         **🤝 Feedback:** Your feedback helps improve these tools. Feel free to reach out with suggestions.
        
-        **🌍 Expanding Coverage:** Now covering US, Canada, India, and Australia with specialized tools for retirement planning, real estate, investment analysis, and options trading!
+        **🌍 Expanding Coverage:** Now covering US, Canada, India, and Australia with specialized tools for retirement planning, real estate, investment analysis, options trading, and Medicare planning!
     """)
    
     # Last updated info
     st.markdown("---")
-    st.caption("Last updated: December 2024 | Apps are continuously maintained and improved | Now featuring Australian retirement planning and US options flow intelligence!")
+    st.caption("Last updated: January 2025 | Apps are continuously maintained and improved | Now featuring IRMAA Medicare planning and universal retirement planning tools!")
 
 
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
