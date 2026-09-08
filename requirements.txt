@@ -2,3 +2,4 @@ streamlit>=1.50,<2
 pandas>=2.3,<3
 openpyxl>=3.1.5,<4
 yt-dlp>=2026.8.19
+imageio-ffmpeg>=0.6.0
