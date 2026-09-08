@@ -109,11 +109,22 @@ def download_video(url: str, out_dir: str, progress_bar, status_text) -> str:
     hook = make_progress_hook(progress_bar, status_text, "Video")
     ffmpeg_path = get_ffmpeg_path()
     ydl_opts = {
-        "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+        "format": "best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
         "merge_output_format": "mp4",
         "outtmpl": os.path.join(out_dir, "%(title)s.%(ext)s"),
         "noplaylist": True,
         "progress_hooks": [hook],
+        "retries": 5,
+        "fragment_retries": 5,
+        "file_access_retries": 3,
+        "http_headers": {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/131.0.0.0 Safari/537.36"
+            ),
+            "Referer": "https://www.youtube.com/",
+        },
         "quiet": True,
         "no_warnings": True,
     }
