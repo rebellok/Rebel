@@ -25,6 +25,7 @@ import os
 import re
 import subprocess
 import shutil
+import importlib
 from urllib.parse import parse_qs, urlparse
 
 import streamlit as st
@@ -106,6 +107,7 @@ def make_progress_hook(progress_bar, status_text, label: str):
 def download_video(url: str, out_dir: str, progress_bar, status_text) -> str:
     """Download the best MP4 video+audio and return the resulting file path."""
     hook = make_progress_hook(progress_bar, status_text, "Video")
+    ffmpeg_path = get_ffmpeg_path()
     ydl_opts = {
         "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
         "merge_output_format": "mp4",
@@ -115,6 +117,8 @@ def download_video(url: str, out_dir: str, progress_bar, status_text) -> str:
         "quiet": True,
         "no_warnings": True,
     }
+    if ffmpeg_path:
+        ydl_opts["ffmpeg_location"] = ffmpeg_path
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         filepath = ydl.prepare_filename(info)
@@ -126,6 +130,10 @@ def download_video(url: str, out_dir: str, progress_bar, status_text) -> str:
 
 def extract_audio(video_path: str, progress_bar, status_text) -> str:
     """Convert the downloaded MP4 to MP3 without contacting YouTube."""
+    ffmpeg_path = get_ffmpeg_path()
+    if not ffmpeg_path:
+        raise RuntimeError("FFmpeg is not available in this deployment.")
+
     base, _ = os.path.splitext(video_path)
     mp3_path = base + ".mp3"
     status_text.text("Audio: converting local MP4 to MP3...")
@@ -133,7 +141,7 @@ def extract_audio(video_path: str, progress_bar, status_text) -> str:
 
     result = subprocess.run(
         [
-            "ffmpeg",
+            ffmpeg_path,
             "-y",
             "-i",
             video_path,
@@ -157,7 +165,20 @@ def extract_audio(video_path: str, progress_bar, status_text) -> str:
 
 
 def check_ffmpeg() -> bool:
-    return shutil.which("ffmpeg") is not None
+    return get_ffmpeg_path() is not None
+
+
+def get_ffmpeg_path() -> str | None:
+    """Find a system FFmpeg or the executable bundled by imageio-ffmpeg."""
+    system_path = shutil.which("ffmpeg")
+    if system_path:
+        return system_path
+
+    try:
+        imageio_ffmpeg = importlib.import_module("imageio_ffmpeg")
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except (ImportError, RuntimeError):
+        return None
 
 
 # --------------------------------------------------------------------------
