@@ -195,12 +195,14 @@ st.write(
 
 if not check_ffmpeg():
     st.error(
-        "⚠️ **ffmpeg was not found on this system.** It is required to merge "
-        "video/audio and to convert audio to MP3.\n\n"
-        "Install it and restart the app:\n"
-        "- macOS: `brew install ffmpeg`\n"
-        "- Ubuntu/Debian: `sudo apt install ffmpeg`\n"
-        "- Windows: download from https://ffmpeg.org/download.html and add it to PATH"
+        "⚠️ **FFmpeg was not found.** It is required to merge video/audio and "
+        "convert audio to MP3.\n\n"
+        "For Streamlit Cloud, deploy this file beside `yt_downloader.py`:\n\n"
+        "```text\n"
+        "requirements.txt\n"
+        "```\n\n"
+        "It must include `imageio-ffmpeg>=0.6.0`. Then redeploy so Streamlit "
+        "installs the dependency."
     )
 
 # Persistent state across reruns
