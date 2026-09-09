@@ -118,19 +118,6 @@ def download_video(url: str, out_dir: str, progress_bar, status_text) -> str:
         "fragment_retries": 5,
         "file_access_retries": 3,
         "socket_timeout": 20,
-        "extractor_args": {
-            "youtube": {
-                "player_client": ["android_vr"],
-            },
-        },
-        "http_headers": {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/131.0.0.0 Safari/537.36"
-            ),
-            "Referer": "https://www.youtube.com/",
-        },
         "quiet": True,
         "no_warnings": True,
     }
